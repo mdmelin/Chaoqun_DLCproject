@@ -1,8 +1,11 @@
 %% This code is written for analysing the mice behavior videos got from Simon & Richard's project
 %% Before running this code, the videos need to be processed by DeepLabCut and got the .cvs output files of all trial videos
 %% Please notice, optogenetic trials and widefield imaging trials locate in different sessions
+fPath = 'C:\Data\churchland\CY_DLCproject\Fez7_SpatialDisc_Jan32_2020_Session1\Fez7_SpatialDisc_Jan32_2020_rawVideos\'
+mousename = 'Fez7'
+Mice_Behavior_Analysis_Function(fPath, mousename)
 
-function [] = Mice_Behavior_Analysis(fPath, mousename)
+function [] = Mice_Behavior_Analysis_Function(fPath, mousename)
 
 %% 1st, loading DeepLabCut output files and aligned camera frame times.
 % the later one can be got by running 'Behavior_alignVideoFrames.m' from Simon
@@ -51,7 +54,7 @@ clear uppath
 
 %% 3rd, dimensionality reduction
 divide_mode = 'responseside';   % what're available: 'stimulus', 'opto', 'optotype', 'outcome', 'responseside', 'formeroutcome', 'formerresponseside', 'random'
-plot_index = [1,0,0,0];
+plot_index = [0,0,0,0]; %Max can change first index from 1 to zero
 [overall_PCAmatrix] = Mice_DimensionReduction(Lateral_allFrames, Bottom_allFrames, aligned_FrameTime, raw_data, divide_mode, plot_index);
 
 [Signi_idx] = HistogramAnalysis(fPath, overall_PCAmatrix, divide_mode, raw_data);    % look at how each label changes with trial going
@@ -59,7 +62,7 @@ plot_index = [1,0,0,0];
 variableList = {'opto', 'outcome', 'responseside', 'formeroutcome', 'formerresponseside'};  % The group labels used to test correlations
 Correlations(overall_PCAmatrix, raw_data, variableList);
 
-dPCA_Mouse(overall_PCAmatrix, raw_data);
+%dPCA_Mouse(overall_PCAmatrix, raw_data); not needed right now
 
 
 %% 4th, Linear regression
